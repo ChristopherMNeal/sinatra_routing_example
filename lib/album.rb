@@ -1,12 +1,12 @@
 class Album
-  attr_reader :id, :name #Our new save method will need reader methods.
+  attr_reader :id, :name
 
   @@albums = {}
-  @@total_rows = 0 # We've added a class variable to keep track of total rows and increment the value when an Album is added.
+  @@total_rows = 0
 
-  def initialize(name, id) # We've added id as a second parameter.
-    @name = name
-    @id = id || @@total_rows += 1  # We've added code to handle the id.
+  def initialize(attributes)
+    @name = attributes.fetch(:name)
+    @id = attributes.fetch(:id) || @@total_rows += 1
   end
 
   def self.all
@@ -14,7 +14,7 @@ class Album
   end
 
   def save
-    @@albums[self.id] = Album.new(self.name, self.id)
+    @@albums[self.id] = Album.new({name: name, id: id})
   end
 
   def ==(album_to_compare)
@@ -36,5 +36,9 @@ class Album
 
   def delete
     @@albums.delete(self.id)
+  end
+
+  def songs
+    Song.find_by_album(self.id)
   end
 end
